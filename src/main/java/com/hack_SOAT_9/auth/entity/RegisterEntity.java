@@ -24,19 +24,20 @@ public class RegisterEntity {
     private String password;
     private String username;
 
-    public static String createUsername(String nome, String sobrenome) {
-        nome = nome.trim().toLowerCase();
-        sobrenome = sobrenome.trim().toLowerCase();
+    public static String createUsername(String name, String surname) {
+        name = name.trim().toLowerCase();
+        surname = surname.trim().toLowerCase();
 
-        String parteNome = nome.length() >= 3 ? nome.substring(0, 3) : nome;
-        String parteSobrenome = sobrenome.length() >= 4 ? sobrenome.substring(0, 4) : sobrenome;
+        String firstNamePart = name.length() >= 3 ? name.substring(0, 3) : name;
+        String lastNamePart = surname.length() >= 4 ? surname.substring(0, 4) : surname;
 
-        String base = capitalize(parteNome + parteSobrenome);
+
+        String base = capitalize(firstNamePart + lastNamePart);
 
         Random random = new Random();
         int randomNumber = 100 + random.nextInt(900);
 
-        return base + randomNumber;
+        return (base + randomNumber).trim();
     }
 
     private static String capitalize(String str) {

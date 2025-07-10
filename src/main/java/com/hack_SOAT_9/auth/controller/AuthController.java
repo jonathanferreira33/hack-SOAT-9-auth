@@ -23,21 +23,20 @@ public class AuthController {
 
     private final RegisterRepository repository;
     private final PasswordEncoder passwordEncoder;
-    private final TokenService service;
+    private final TokenService tokenService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO body){
-        var emaill = body.email();
-        var pass = body.email();
+
         RegisterEntity user = this.repository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
 
         if(!passwordEncoder.matches(body.password(), user.getPassword()))
             return ResponseEntity.badRequest().build();
 
-        String token = this.service.generateToken(user);
+        String token = this.tokenService.generateToken(user);
 
         return ResponseEntity.ok(
-                new LoginResponseDTO(user.getName(), token)
+                new LoginResponseDTO(token, user.getUsername())
         );
     }
 
@@ -56,10 +55,10 @@ public class AuthController {
         newUser.setUsername(RegisterEntity.createUsername(body.firstName(), body.surname()));
         this.repository.save(newUser);
 
-        String token = this.service.generateToken(newUser);
+        String token = this.tokenService.generateToken(newUser);
 
         return ResponseEntity.ok(
-                new LoginResponseDTO(token, newUser.getName())
+                new LoginResponseDTO(token, newUser.getUsername())
         );
     }
 }
